@@ -10,9 +10,11 @@ from sklearn.metrics import (
     precision_score, recall_score, classification_report
 )
 
+
 def load_params(path="params.yaml"):
     with open(path) as f:
         return yaml.safe_load(f)
+
 
 def evaluate(params):
     out_dir = params["data"]["processed_path"]
@@ -37,18 +39,19 @@ def evaluate(params):
     print("[evaluate] Metrics:", json.dumps(metrics, indent=2))
     print(classification_report(y_test, y_pred))
 
-    import os; os.makedirs("reports", exist_ok=True)
+    os.makedirs("reports", exist_ok=True)
     with open(metrics_path, "w") as f:
         json.dump(metrics, f, indent=2)
 
-    mlflow.set_tracking_uri("http://localhost:5000")
+    # Use env var if set, otherwise fall back to local file tracking
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
+    mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment("loan-risk-prediction")
     with mlflow.start_run(run_name="lgbm-evaluation"):
         mlflow.log_metrics(metrics)
+
     print(f"[evaluate] Metrics saved to {metrics_path}")
 
-tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
-mlflow.set_tracking_uri(tracking_uri)
 
 if __name__ == "__main__":
     params = load_params()

@@ -20,7 +20,9 @@ def train(params):
 
     mp = params["model"]
 
-    mlflow.set_tracking_uri("http://localhost:5000")
+    # Use env var if set, otherwise fall back to local file tracking
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
+    mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment("loan-risk-prediction")
 
     with mlflow.start_run(run_name="lgbm-training"):
@@ -50,14 +52,8 @@ def train(params):
 
         os.makedirs("models", exist_ok=True)
         joblib.dump(model, "models/model.pkl")
-
-        # Use native LightGBM flavor instead of sklearn flavor — avoids skops trust error
         mlflow.lightgbm.log_model(model, "model")
         print("[train] Model saved to models/model.pkl and logged to MLflow")
-
-# Use local file tracking if no server is running (CI environment)
-tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
-mlflow.set_tracking_uri(tracking_uri)
 
 if __name__ == "__main__":
     params = load_params()
