@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# MLOps specific
+.env
+*.egg-info/
+mlruns/
+__pycache__/
+*.pyc
+.dvc/cache/
+data/raw/*
+data/processed/*
+models/*
+!models/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
