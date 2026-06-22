@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 import json
 import joblib
+import os
 import mlflow
 from sklearn.metrics import (
     roc_auc_score, accuracy_score, f1_score,
@@ -45,6 +46,9 @@ def evaluate(params):
     with mlflow.start_run(run_name="lgbm-evaluation"):
         mlflow.log_metrics(metrics)
     print(f"[evaluate] Metrics saved to {metrics_path}")
+
+tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
+mlflow.set_tracking_uri(tracking_uri)
 
 if __name__ == "__main__":
     params = load_params()
