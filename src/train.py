@@ -54,7 +54,6 @@ def train(params):
         # Use native LightGBM flavor instead of sklearn flavor — avoids skops trust error
         mlflow.lightgbm.log_model(model, "model")
         print("[train] Model saved to models/model.pkl and logged to MLflow")
-import os
 
 # Use local file tracking if no server is running (CI environment)
 tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
