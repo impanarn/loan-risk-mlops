@@ -22,9 +22,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install fastapi uvicorn lightgbm scikit-learn pandas numpy \
-                      joblib prometheus-client python-dotenv pydantic \
-                      pytest httpx flake8
+          pip install "pandas==2.2.2" "python-dateutil==2.9.0" \
+            fastapi uvicorn "lightgbm==4.3.0" scikit-learn \
+            numpy joblib prometheus-client python-dotenv pydantic \
+            pytest httpx flake8 "httpx==0.27.0"
 
       - name: Lint with flake8
         run: flake8 src/ tests/ --max-line-length=100 --ignore=E501,W503,E302,E303,F401,E221,W292,E241,E702,E305,E401,E402,F821
